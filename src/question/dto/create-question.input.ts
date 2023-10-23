@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsString,
   MinLength,
+  ArrayNotEmpty,
 } from 'class-validator';
 
 @InputType()
@@ -17,6 +18,7 @@ export class CreateQuestionInput {
   @Field(() => [ChoiceInputCreate])
   @IsArray()
   @MinLength(2, { each: true })
+  @ArrayNotEmpty()
   choices: ChoiceInputCreate[];
 }
 

@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuestionnaireInput } from './dto/create-questionnaire.input';
 import { Questionnaire } from './entities/questionnaire.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,12 +30,37 @@ export class QuestionnaireService {
     return creationQuestion;
   }
 
-  findAll() {
-    return `This action returns all questionnaire`;
+  async findAll() {
+    // const questionnaire = await this.questionnaireRepository.findBy({
+    //   createdBy: 69,
+    // });
+    // if (!questionnaire) {
+    //   Logger.log('reached');
+    //   throw new NotFoundException(
+    //     `Could not find any Questionnaire matching id : ${id}`,
+    //   );
+    // }
+    // Logger.log({ questionnaire });
+    // return questionnaire;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} questionnaire`;
+  async findOne(id: number) {
+    if (!id) {
+      throw new BadRequestException('Please provide a valid ID');
+    }
+    const questionnaire = await this.questionnaireRepository.findOne({
+      where: { id },
+      relations: { questions: true },
+    });
+
+    if (!questionnaire) {
+      throw new NotFoundException(
+        `Could not find any Questionnaire matching id : ${id}`,
+      );
+    }
+    Logger.log({ questionnaire });
+
+    return questionnaire;
   }
 
   async update(

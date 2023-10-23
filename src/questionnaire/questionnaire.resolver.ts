@@ -21,15 +21,18 @@ export class QuestionnaireResolver {
     return this.questionnaireService.create(createQuestionnaireInput);
   }
 
-  @Query(() => [Questionnaire], { name: 'questionnaire' })
+  @Query(() => [Questionnaire], { name: 'GetQuestionnaires' })
   findAll() {
     return this.questionnaireService.findAll();
   }
 
-  @Query(() => Questionnaire, { name: 'questionnaire' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.questionnaireService.findOne(id);
+  @Query(() => Questionnaire, { name: 'GetQuestionnaire' })
+  async findOne(@Args('id', { type: () => Int, nullable: false }) id: number) {
+    const result = await this.questionnaireService.findOne(id);
+    Logger.log({ result });
+    return result;
   }
+
   @Query(() => String)
   sayHello(): string {
     return 'Hello World!';
@@ -47,6 +50,11 @@ export class QuestionnaireResolver {
     );
   }
 
+  @Mutation(() => Questionnaire)
+  removeQuestionnaire(@Args('id', { type: () => Int }) id: number) {
+    return this.questionnaireService.remove(id);
+  }
+
   @Mutation(() => UpdateQuestionResponse)
   updateQuestion(
     @Args('updateQuestionInput', {
@@ -55,10 +63,5 @@ export class QuestionnaireResolver {
     updateQuestionInput: UpdateQuestionInput | UpdateQuestionInput[],
   ) {
     return this.questionnaireService.updateQuestion(updateQuestionInput);
-  }
-
-  @Mutation(() => Questionnaire)
-  removeQuestionnaire(@Args('id', { type: () => Int }) id: number) {
-    return this.questionnaireService.remove(id);
   }
 }

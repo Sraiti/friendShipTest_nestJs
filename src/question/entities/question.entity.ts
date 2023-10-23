@@ -19,11 +19,10 @@ export class Question {
   @Column()
   content: string;
 
-  @Field(() => Questionnaire)
   @ManyToOne(() => Questionnaire, (questionnaire) => questionnaire.questions)
   questionnaire: Questionnaire;
 
-  @Field(() => Choice)
+  @Field(() => [Choice])
   @OneToMany(() => Choice, (choice) => choice.question, { cascade: true })
   choices: Choice[];
 }
@@ -43,7 +42,6 @@ export class Choice {
   @Column({ default: false })
   isCorrect: boolean;
 
-  @Field()
   @ManyToOne(() => Question, (question) => question.choices)
   question: Question;
 }

@@ -38,7 +38,7 @@ export class Questionnaire {
   @Column({ nullable: true, default: '' })
   description: string;
 
-  @Field(() => Question)
+  @Field(() => [Question])
   @OneToMany(() => Question, (question) => question.questionnaire, {
     cascade: true,
   })
